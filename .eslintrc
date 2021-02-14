@@ -22,6 +22,8 @@
   },
   "rules": {
     "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "react/display-name": "off",
     "@typescript-eslint/indent": "off",
     "@typescript-eslint/member-delimiter-style": "off",
     "@typescript-eslint/ban-ts-comment": "off",
