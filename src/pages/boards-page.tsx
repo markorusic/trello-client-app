@@ -1,4 +1,5 @@
 import { useHistory } from 'react-router-dom'
+import i18next from 'i18next'
 import { notyf } from '../config/notify'
 import Container from '../shared/components/container'
 import { useBoardCreateMutation } from '../query-hooks/board-hooks'
@@ -11,13 +12,13 @@ export const BoardsPage = () => {
   const boardCreateMutation = useBoardCreateMutation()
   return (
     <Container>
-      <ButtonModal title="Create new board">
+      <ButtonModal title="boards.createBoard">
         <BoardForm
           onSubmit={(values, actions) =>
             boardCreateMutation.mutate(values, {
               onSuccess: board => history.push(`board/${board.id}`),
               onError: () => {
-                notyf.error('An error occured while creating new board!')
+                notyf.error(i18next.t('boards.createBoardError'))
               },
               onSettled: () => actions.setSubmitting(false)
             })

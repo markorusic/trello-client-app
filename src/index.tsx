@@ -4,6 +4,9 @@ import { QueryClientProvider } from 'react-query'
 import './index.css'
 import App from './App'
 import { queryClient } from './config/query-client'
+import { initI18n } from './config/i18n'
+
+initI18n()
 
 ReactDOM.render(
   <React.StrictMode>

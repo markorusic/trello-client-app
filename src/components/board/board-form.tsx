@@ -24,14 +24,19 @@ export const BoardForm: FC<BoardFormProps> = ({
 }) => {
   return (
     <Form {...props} initialValues={initialValues}>
-      <TextInput name="name" label="Name" placeholder="Enter name" autoFocus />
+      <TextInput
+        name="name"
+        label="commons.name"
+        placeholder="boards.enterName"
+        autoFocus
+      />
       <TextArea
         name="desc"
-        label="Description"
-        placeholder="Enter description"
+        label="commons.description"
+        placeholder="boards.enterDescription"
       />
-      <BackgroundPickerInput name="prefs" label="Board background" />
-      <SubmitButton>Submit</SubmitButton>
+      <BackgroundPickerInput name="prefs" label="boards.boardBackground" />
+      <SubmitButton />
     </Form>
   )
 }

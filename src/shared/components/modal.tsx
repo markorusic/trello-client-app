@@ -1,12 +1,18 @@
-import { uniqueId } from 'lodash'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { uniqueId } from 'lodash'
 
 export interface ModalProps {
   title?: string
   onClose: () => void
 }
 
-export const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
+export const Modal: React.FC<ModalProps> = ({
+  title = '',
+  onClose,
+  children
+}) => {
+  const { t } = useTranslation()
   const { current: id } = useRef(uniqueId('modal'))
   return (
     <>
@@ -28,7 +34,7 @@ export const Modal: React.FC<ModalProps> = ({ title, onClose, children }) => {
             className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"
           >
             <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
-              <h3 className="text-2xl font-semibold">{title}</h3>
+              <h3 className="text-2xl font-semibold">{t(title)}</h3>
               <button
                 className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                 onClick={() => onClose()}

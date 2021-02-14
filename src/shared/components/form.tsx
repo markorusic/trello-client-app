@@ -1,5 +1,6 @@
 import { cloneElement, FC, HTMLProps, ReactElement, useRef } from 'react'
 import { uniqueId } from 'lodash'
+import { useTranslation } from 'react-i18next'
 import {
   useFormikContext,
   useField,
@@ -24,22 +25,23 @@ export interface BaseInputProps {
 
 export const FormInputContainer: FC<BaseInputProps> = ({
   name,
-  label,
+  label = '',
   children
 }) => {
+  const { t } = useTranslation()
   const [, meta] = useField(name)
   const { current: id } = useRef(`${uniqueId('form_input')}_${name}`)
   return (
     <div className="mb-3">
       <div>
         <label className="font-bold" htmlFor={id}>
-          {label}
+          {t(label)}
         </label>
       </div>
       <div>{cloneElement(children as ReactElement, { id })}</div>
       {meta.touched && meta.error ? (
         <div>
-          <span className="text-red-600">{meta.error}</span>
+          <span className="text-red-600">{t(meta.error)}</span>
         </div>
       ) : null}
     </div>
@@ -47,12 +49,21 @@ export const FormInputContainer: FC<BaseInputProps> = ({
 }
 
 export const SubmitButton: FC<ButtonProps> = props => {
+  const { t } = useTranslation()
   const form = useFormikContext()
-  return <Button {...props} loading={form.isSubmitting} />
+  return (
+    <Button {...props} type="submit" loading={form.isSubmitting}>
+      {props.children ?? t('commons.submit')}
+    </Button>
+  )
 }
 
 export type TextInputProps = BaseInputProps & HTMLProps<HTMLInputElement>
-export const TextInput: FC<TextInputProps> = props => {
+export const TextInput: FC<TextInputProps> = ({
+  placeholder = '',
+  ...props
+}) => {
+  const { t } = useTranslation()
   const [field] = useField(props.name)
   return (
     <FormInputContainer {...props}>
@@ -61,13 +72,15 @@ export const TextInput: FC<TextInputProps> = props => {
         type="text"
         {...field}
         {...props}
+        placeholder={t(placeholder)}
       />
     </FormInputContainer>
   )
 }
 
 export type TextAreaProps = BaseInputProps & HTMLProps<HTMLTextAreaElement>
-export const TextArea: FC<TextAreaProps> = props => {
+export const TextArea: FC<TextAreaProps> = ({ placeholder = '', ...props }) => {
+  const { t } = useTranslation()
   const [field] = useField(props.name)
   return (
     <FormInputContainer {...props}>
@@ -75,6 +88,7 @@ export const TextArea: FC<TextAreaProps> = props => {
         className="rounded-md border-2 border-gray-300 p-1 w-full"
         {...field}
         {...props}
+        placeholder={t(placeholder)}
       />
     </FormInputContainer>
   )

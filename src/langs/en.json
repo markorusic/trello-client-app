@@ -1,0 +1,14 @@
+{
+  "commons": {
+    "submit": "Submit",
+    "name": "Name",
+    "description": "Description"
+  },
+  "boards": {
+    "createBoard": "Create new board",
+    "createBoardError": "An error occured while creating new board!",
+    "enterName": "Enter name",
+    "enterDescription": "Enter description",
+    "boardBackground": "Board background"
+  }
+}
