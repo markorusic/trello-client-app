@@ -18,7 +18,7 @@ export const BoardForm: FC<BoardFormProps> = ({
   initialValues = {
     name: '',
     desc: '',
-    prefs: { backgroundColor: '', backgroundBrightness: 'dark' }
+    prefs_background: ''
   },
   ...props
 }) => {
@@ -35,7 +35,10 @@ export const BoardForm: FC<BoardFormProps> = ({
         label="commons.description"
         placeholder="boards.enterDescription"
       />
-      <BackgroundPickerInput name="prefs" label="boards.boardBackground" />
+      <BackgroundPickerInput
+        name="prefs_background"
+        label="boards.boardBackground"
+      />
       <SubmitButton />
     </Form>
   )

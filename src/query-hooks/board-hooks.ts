@@ -21,8 +21,13 @@ export const useBoard = (id: string) =>
 
 export const useBoardCreateMutation = () =>
   useMutation(boardService.create, {
-    onMutate: async (newBoardDto: BoardMutationDto) => {
-      const board: BoardDto = { id: uniqueId(), ...newBoardDto }
+    onMutate: async (boardMutationDto: BoardMutationDto) => {
+      const { prefs_background, ...rest } = boardMutationDto
+      const board: BoardDto = {
+        id: uniqueId(),
+        prefs: { backgroundColor: prefs_background },
+        ...rest
+      }
       await queryClient.cancelQueries(boardQueryKeys.boards)
       const previousBoards = queryClient.getQueryData<BoardDto[]>(
         boardQueryKeys.boards

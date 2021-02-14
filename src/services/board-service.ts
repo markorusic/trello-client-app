@@ -4,8 +4,8 @@ export interface BoardDto {
   name: string
   desc: string
   prefs: {
-    backgroundBrightness: 'dark' | 'light'
     backgroundColor: string
+    backgroundBrightness?: 'dark' | 'light'
     backgroundImageScaled?: {
       width: number
       height: number
@@ -14,7 +14,11 @@ export interface BoardDto {
   }
 }
 
-export type BoardMutationDto = Omit<BoardDto, 'id'>
+export type BoardMutationDto = {
+  name: string
+  desc: string
+  prefs_background: string
+}
 
 export const boardService = {
   fetchAll: async () => {
@@ -29,8 +33,11 @@ export const boardService = {
     const { data } = await trelloClient.get<BoardDto>(`/boards/${id}`)
     return data
   },
-  create: async (newBoardDto: BoardMutationDto) => {
-    const { data } = await trelloClient.post<BoardDto>('/boards', newBoardDto)
+  create: async (boardMutationDto: BoardMutationDto) => {
+    const { data } = await trelloClient.post<BoardDto>(
+      '/boards',
+      boardMutationDto
+    )
     return data
   }
 }
