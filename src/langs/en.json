@@ -1,4 +1,7 @@
 {
+  "validation": {
+    "required": "Field is required"
+  },
   "commons": {
     "submit": "Submit",
     "name": "Name",
