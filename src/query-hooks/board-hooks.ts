@@ -1,4 +1,4 @@
-import { first, last, map, uniqueId } from 'lodash'
+import { find, first, last, uniqueId } from 'lodash'
 import { CSSProperties } from 'react'
 import { useMutation, useQuery } from 'react-query'
 import { queryClient } from '../config/query-client'
@@ -7,6 +7,7 @@ import {
   boardService,
   BoardMutationDto
 } from '../services/board-service'
+import { collectionOptimisticUpdate } from '../shared/query-utils'
 
 export const boardQueryKeys = {
   boards: 'boards',
@@ -16,49 +17,40 @@ export const boardQueryKeys = {
 export const useBoards = () =>
   useQuery(boardQueryKeys.boards, boardService.fetchAll)
 
-export const useBoard = (id: string) =>
-  useQuery([boardQueryKeys.board, id], () => boardService.fetchById(id))
+export const useBoard = (id: string) => {
+  const boards = queryClient.getQueryData<BoardDto[]>(boardQueryKeys.boards)
+  const board = find(boards, ['id', id])
+  return useQuery(
+    [boardQueryKeys.board, id],
+    () => boardService.fetchById(id),
+    {
+      placeholderData: board
+    }
+  )
+}
 
 export const useBoardCreateMutation = () =>
   useMutation(boardService.create, {
-    onMutate: async (boardMutationDto: BoardMutationDto) => {
-      const { prefs_background, ...rest } = boardMutationDto
-      const board: BoardDto = {
-        id: uniqueId(),
+    ...collectionOptimisticUpdate<BoardMutationDto, BoardDto>({
+      getKey: () => boardQueryKeys.boards,
+      mutationMapper: ({ prefs_background, ...rest }) => ({
+        id: uniqueId(boardQueryKeys.boards),
         prefs: { backgroundColor: prefs_background },
         ...rest
-      }
-      await queryClient.cancelQueries(boardQueryKeys.boards)
-      const previousBoards = queryClient.getQueryData<BoardDto[]>(
-        boardQueryKeys.boards
-      )
-      queryClient.setQueryData<BoardDto[]>(boardQueryKeys.boards, old => [
-        ...(old ?? []),
-        board
-      ])
-      return { previousBoards, board }
-    },
-    onSuccess: (board, _, context) => {
-      queryClient.setQueryData<BoardDto[]>(boardQueryKeys.boards, boards =>
-        map(boards, b => (b.id === context?.board.id ? board : b))
-      )
-    },
-    onError: (_, __, context) => {
-      queryClient.setQueryData(boardQueryKeys.boards, context?.previousBoards)
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries(boardQueryKeys.boards)
-    }
+      })
+    })
   })
 
 export const useBoardStyle = (
   board: BoardDto | undefined,
   type: 'sm' | 'lg' = 'sm'
 ): CSSProperties => {
+  const defaultBgColor = '#D1D5DA'
+  const defaultTextColor = 'black'
   if (!board) {
     return {
-      backgroundColor: 'black',
-      color: 'white'
+      backgroundColor: defaultBgColor,
+      color: defaultTextColor
     }
   }
   const { prefs } = board
@@ -66,11 +58,11 @@ export const useBoardStyle = (
   // TODO: impl logic based on screen size
   const image = type === 'sm' ? first(images) : last(images)
   return {
-    backgroundColor: prefs.backgroundColor ?? 'black',
+    backgroundColor: prefs.backgroundColor ?? defaultBgColor,
     color: prefs.backgroundBrightness === 'dark' ? 'white' : 'black',
     ...(image
       ? {
-          background: `url("${image.url}")`,
+          backgroundImage: `url("${image.url}")`,
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center center',
           backgroundSize: 'cover'
