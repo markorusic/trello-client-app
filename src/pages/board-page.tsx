@@ -58,7 +58,6 @@ const BoardPage = () => {
         <div className="relative flex flex-grow overflow-auto">
           <BoradSettings
             board={boardQuery.data}
-            onClose={() => setShowSettings(false)}
             style={{
               width: 325,
               opacity: showSettings ? 1 : 0,
