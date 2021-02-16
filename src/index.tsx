@@ -1,18 +1,21 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { QueryClientProvider } from 'react-query'
-import './index.css'
-import App from './App'
+import { BrowserRouter } from 'react-router-dom'
 import { queryClient } from './config/query-client'
 import { initI18n } from './config/i18n'
+import App from './App'
+import './index.css'
 
 initI18n()
 
 ReactDOM.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 )

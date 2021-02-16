@@ -23,6 +23,8 @@
   },
   "cards": {
     "createNew": "Add another card",
-    "createError": "An error occured while creating new card!"
+    "createError": "An error occured while creating new card!",
+    "enterName": "Enter name",
+    "enterDescription": "Add more detailed description"
   }
 }

@@ -5,25 +5,31 @@ export interface CardDto {
   name: string
   idList: string
   pos: number
+  desc: string
 }
 
 export interface CardMutationDto {
   id?: string
   idList: string
   name: string
+  desc: string
   pos?: ('top' | 'bottom') | number
 }
+
+const fields = ['name', 'idList', 'pos', 'desc'].join(',')
 
 export const cardService = {
   fetchByListId: async (listId: string) => {
     const { data } = await trelloClient.get<CardDto[]>(
       `/lists/${listId}/cards`,
-      {
-        params: {
-          fields: ['name', 'idList', 'pos'].join(',')
-        }
-      }
+      { params: { fields } }
     )
+    return data
+  },
+  fetchById: async (id: string) => {
+    const { data } = await trelloClient.get<CardDto>(`/cards/${id}`, {
+      params: { fields }
+    })
     return data
   },
   create: async (cardMutationDto: CardMutationDto) => {

@@ -3,8 +3,8 @@ import { useBoard, useBoardStyle } from '../query-hooks/board-hooks'
 import { BoardView } from '../components/board-view/board-view'
 
 const BoardPage = () => {
-  const { id } = useParams<{ id: string }>()
-  const boardQuery = useBoard(id)
+  const { boardId } = useParams<{ boardId: string }>()
+  const boardQuery = useBoard(boardId)
   const style = useBoardStyle(boardQuery.data, 'lg')
   return (
     <div style={style} className="h-screen flex flex-col">

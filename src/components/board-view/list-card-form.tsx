@@ -20,7 +20,8 @@ export const ListCardForm: FC<ListCardFormProps> = ({ listId, ...props }) => {
       initialValues={{
         name: '',
         idList: listId,
-        pos: 'bottom'
+        pos: 'bottom',
+        desc: ''
       }}
       validate={values => {
         if (!values.name) {

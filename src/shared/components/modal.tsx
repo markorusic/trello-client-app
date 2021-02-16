@@ -1,14 +1,19 @@
-import { useRef } from 'react'
+import { CSSProperties, ReactNode, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { uniqueId } from 'lodash'
+import classNames from 'classnames'
 
 export interface ModalProps {
-  title?: string
+  title?: string | ReactNode
+  className?: string
+  style?: CSSProperties
   onClose: () => void
 }
 
 export const Modal: React.FC<ModalProps> = ({
   title = '',
+  className = '',
+  style = {},
   onClose,
   children
 }) => {
@@ -26,15 +31,17 @@ export const Modal: React.FC<ModalProps> = ({
         }}
       >
         <div
-          className="relative w-auto my-6 mx-auto max-w-3xl"
-          style={{ minWidth: '400px' }}
+          className={classNames('relative my-6 w-auto mx-auto', className)}
+          style={{ minWidth: '400px', ...style }}
         >
           <div
             id={id}
-            className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none"
+            className="bg-gray-200 border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none focus:outline-none"
           >
             <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
-              <h3 className="text-2xl font-semibold">{t(title)}</h3>
+              <h3 className="text-2xl font-semibold break-all">
+                {typeof title === 'string' ? t(title) : title}
+              </h3>
               <button
                 className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                 onClick={() => onClose()}

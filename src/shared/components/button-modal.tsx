@@ -16,7 +16,10 @@ export const ButtonModal: FC<ButtonModalProps> = ({
   return (
     <>
       <Button onClick={() => setShowModal(true)} {...buttonProps}>
-        {buttonProps.children ?? t(props.title || '')}
+        {buttonProps.children ??
+          (typeof props.title === 'string'
+            ? t(props.title || '')
+            : props.title)}
       </Button>
       {showModal ? (
         <Modal onClose={() => setShowModal(false)} {...props} />

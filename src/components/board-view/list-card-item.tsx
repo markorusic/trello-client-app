@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Draggable } from 'react-beautiful-dnd'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import { CardDto } from '../../services/card-service'
 
 export interface ListCardItemProps {
@@ -8,6 +9,8 @@ export interface ListCardItemProps {
 }
 
 export const ListCardItem: FC<ListCardItemProps> = ({ card, index }) => {
+  const location = useLocation()
+  const { boardId } = useParams<{ boardId: string }>()
   return (
     <Draggable draggableId={card.id} index={index}>
       {provided => (
@@ -17,7 +20,15 @@ export const ListCardItem: FC<ListCardItemProps> = ({ card, index }) => {
           ref={provided.innerRef}
           {...provided.dragHandleProps}
         >
-          {card.name}
+          <Link
+            className="block"
+            to={{
+              pathname: `/board/${boardId}/cards/${card.id}`,
+              state: { background: location, initialData: card }
+            }}
+          >
+            {card.name}
+          </Link>
         </div>
       )}
     </Draggable>
