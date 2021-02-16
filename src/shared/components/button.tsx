@@ -9,11 +9,17 @@ export interface ButtonProps
   bgColor?: string
   textColor?: string
   loading?: boolean
+  px?: number
+  py?: number
+  text?: string
 }
 
 export const Button: React.FC<ButtonProps> = ({
   bgColor = 'blue',
   textColor = 'white',
+  px = 3,
+  py = 2,
+  text = 'sm',
   loading = false,
   className,
   ...props
@@ -23,10 +29,9 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       className={classNames(
         `bg-${bgColor}-500 text-${textColor}
-        active:bg-pink-600
         font-bold
-        text-sm
-        px-6 py-3
+        text-${text}
+        px-${px} py-${py}
         rounded
         shadow
         hover:shadow-lg

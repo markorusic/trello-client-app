@@ -1,4 +1,4 @@
-import { FC, useState } from 'react'
+import { CSSProperties, FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from './button'
 import { XIcon } from './icons'
@@ -7,12 +7,16 @@ export interface PopconfirmProps {
   title: string
   onConfirm: () => void
   okText?: string
+  position?: 'top' | 'bottom'
+  style?: CSSProperties
 }
 
 export const Popconfirm: FC<PopconfirmProps> = ({
   title,
   onConfirm,
   okText = 'commons.yes',
+  position = 'top',
+  style = {},
   children
 }) => {
   const { t } = useTranslation()
@@ -20,16 +24,26 @@ export const Popconfirm: FC<PopconfirmProps> = ({
   return (
     <div className="relative">
       {showPopup ? (
-        <div className="absolute p-3 w-72 bottom-6 rounded shadow-xl bg-white border border-gray-300 flex flex-col items-center cursor-default">
-          <div className="flex text-lg text-gray-600 justify-between w-full">
-            <div className="flex flex-1 justify-center">{t(title)}</div>
-            <div className="cursor-pointer" onClick={() => setShowPopup(false)}>
+        <div
+          style={style}
+          className={`${
+            position === 'top' ? 'bottom' : 'top'
+          }-6 absolute p-3 w-56 rounded shadow-xl bg-white border border-gray-300 flex flex-col cursor-default`}
+        >
+          <div className="flex text-gray-600 justify-between w-full">
+            <div className="flex flex-1 text-base">{t(title)}</div>
+            <div
+              className="cursor-pointer text-sm"
+              onClick={() => setShowPopup(false)}
+            >
               <XIcon color="black" />
             </div>
           </div>
-          <div className="mt-2 w-full">
+          <div className="mt-2">
             <Button
-              className="w-full"
+              px={2}
+              py={1}
+              text="xs"
               bgColor="red"
               onClick={() => {
                 setShowPopup(false)

@@ -42,5 +42,9 @@ export const cardService = {
       cardMutationDto
     )
     return data
+  },
+  delete: async (cardDto: CardDto) => {
+    const { data } = await trelloClient.delete(`/cards/${cardDto.id}`)
+    return data
   }
 }

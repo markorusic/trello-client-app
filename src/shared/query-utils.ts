@@ -68,6 +68,44 @@ export const collectionOptimisticUpdate = <
   return mutationOptions
 }
 
+export interface DeleteOptimisticUpdateOptions<DomainType> {
+  getKey: (mutationDto: DomainType) => QueryKey
+  mapCollection?: (items: DomainType[]) => DomainType[]
+}
+
+export const deleteOptimisticUpdate = <DomainType extends Identifiable>({
+  getKey,
+  mapCollection = identity
+}: DeleteOptimisticUpdateOptions<DomainType>) => {
+  const mutationOptions: UseMutationOptions<
+    unknown,
+    unknown,
+    DomainType,
+    {
+      key: QueryKey
+      previousItems: DomainType[] | undefined
+    }
+  > = {
+    onMutate: async (item: DomainType) => {
+      const key = getKey(item)
+      await queryClient.cancelQueries(key)
+      const previousItems = queryClient.getQueryData<DomainType[]>(key)
+      queryClient.setQueryData<DomainType[]>(key, old => {
+        const items = [...(old ?? [])].filter(comment => comment.id !== item.id)
+        return mapCollection(items)
+      })
+      return { key, previousItems }
+    },
+    onError: (_, __, context) => {
+      if (context?.key) {
+        queryClient.setQueryData(context.key, context?.previousItems)
+      }
+    }
+  }
+
+  return mutationOptions
+}
+
 export const createFormMutationOptions = (
   actions: FormikHelpers<any>,
   errorMessage = 'commons.error'

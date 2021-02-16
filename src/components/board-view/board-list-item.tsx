@@ -1,18 +1,13 @@
 import { FC } from 'react'
 import { Draggable, Droppable } from 'react-beautiful-dnd'
 import { useCards } from '../../query-hooks/card-hooks'
+import { useListDeleteMutation } from '../../query-hooks/list-hooks'
 import { ListDto } from '../../services/list-service'
+import { ArchiveIcon } from '../../shared/components/icons'
+import { Popconfirm } from '../../shared/components/popconfirm'
 import { ListCardForm } from './list-card-form'
 import { ListCardItem } from './list-card-item'
 import { ListTitle } from './list-title'
-
-// const multiply = <T,>(items: T[] | undefined = [], times: number) =>
-//   flatMap(range(0, times), i =>
-//     items.map(item => ({
-//       ...item,
-//       ...(i === 0 ? {} : { id: uniqueId() })
-//     }))
-//   )
 
 interface BoardListItemProps {
   list: ListDto
@@ -21,6 +16,7 @@ interface BoardListItemProps {
 
 export const BoardListItem: FC<BoardListItemProps> = ({ list, index }) => {
   const cardsQuery = useCards(list.id)
+  const listDeleteMutation = useListDeleteMutation()
   return (
     <Draggable draggableId={list.id} index={index}>
       {draggableProvided => (
@@ -30,8 +26,21 @@ export const BoardListItem: FC<BoardListItemProps> = ({ list, index }) => {
           ref={draggableProvided.innerRef}
         >
           <div className="bg-gray-200 p-2 rounded flex flex-col max-h-full text-sm">
-            <div {...draggableProvided.dragHandleProps}>
+            <div
+              className="flex justify-between items-center"
+              {...draggableProvided.dragHandleProps}
+            >
               <ListTitle list={list} />
+              <Popconfirm
+                title="lists.archivePrompt"
+                okText="lists.archiveConfirm"
+                position="bottom"
+                onConfirm={() => listDeleteMutation.mutate(list)}
+              >
+                <div className="text-xl cursor-pointer hover:opacity-80">
+                  <ArchiveIcon color="black" />
+                </div>
+              </Popconfirm>
             </div>
             <Droppable droppableId={list.id}>
               {droppableProvided => (

@@ -6,9 +6,11 @@ import {
   CommentMutationDto,
   commentService
 } from '../services/comment-service'
-import { collectionOptimisticUpdate } from '../shared/query-utils'
+import {
+  collectionOptimisticUpdate,
+  deleteOptimisticUpdate
+} from '../shared/query-utils'
 import { cardQueryKeys } from './card-hooks'
-import { queryClient } from '../config/query-client'
 
 export const commentQueryKeys = {
   comments: 'comments'
@@ -50,18 +52,7 @@ export const useCommentUpdateMutation = () =>
 
 export const useCommentDeleteMutation = () =>
   useMutation(commentService.delete, {
-    onMutate: async (commentDto: CommentDto) => {
-      const key = [commentQueryKeys.comments, commentDto.data.card.id]
-      await queryClient.cancelQueries(key)
-      const previousItems = queryClient.getQueryData<CommentDto[]>(key)
-      queryClient.setQueryData<CommentDto[]>(key, old => {
-        return [...(old ?? [])].filter(comment => comment.id !== commentDto.id)
-      })
-      return { key, previousItems }
-    },
-    onError: (_, __, context) => {
-      if (context?.key) {
-        queryClient.setQueryData(context.key, context?.previousItems)
-      }
-    }
+    ...deleteOptimisticUpdate({
+      getKey: commentDto => [commentQueryKeys.comments, commentDto.data.card.id]
+    })
   })

@@ -36,5 +36,11 @@ export const listService = {
       listMutationDto
     )
     return data
+  },
+  delete: async (listDto: ListDto) => {
+    const { data } = await trelloClient.put(`/lists/${listDto.id}/closed`, {
+      value: true
+    })
+    return data
   }
 }

@@ -1,7 +1,10 @@
 import { uniqueId } from 'lodash'
 import { useMutation, useQuery, UseQueryOptions } from 'react-query'
 import { CardDto, CardMutationDto, cardService } from '../services/card-service'
-import { collectionOptimisticUpdate } from '../shared/query-utils'
+import {
+  collectionOptimisticUpdate,
+  deleteOptimisticUpdate
+} from '../shared/query-utils'
 import { listQueryKeys } from './list-hooks'
 
 export const cardQueryKeys = {
@@ -39,3 +42,10 @@ export const useCardCreateMutation = () =>
 
 export const useCardUpdateMutation = () =>
   useMutation(cardService.update, mutationOptions)
+
+export const useCardDeleteMutation = () =>
+  useMutation(cardService.delete, {
+    ...deleteOptimisticUpdate({
+      getKey: cardDto => [cardQueryKeys.cards, cardDto.idList]
+    })
+  })

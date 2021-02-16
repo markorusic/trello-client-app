@@ -1,7 +1,10 @@
 import { uniqueId } from 'lodash'
 import { useMutation, useQuery } from 'react-query'
 import { ListDto, ListMutationDto, listService } from '../services/list-service'
-import { collectionOptimisticUpdate } from '../shared/query-utils'
+import {
+  collectionOptimisticUpdate,
+  deleteOptimisticUpdate
+} from '../shared/query-utils'
 
 export const listQueryKeys = {
   lists: 'lists'
@@ -27,3 +30,10 @@ export const useListCreateMutation = () =>
 
 export const useListUpdateMutation = () =>
   useMutation(listService.update, mutationOptions)
+
+export const useListDeleteMutation = () =>
+  useMutation(listService.delete, {
+    ...deleteOptimisticUpdate({
+      getKey: listDto => [listQueryKeys.lists, listDto.idBoard]
+    })
+  })
