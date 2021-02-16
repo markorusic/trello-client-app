@@ -9,15 +9,15 @@ import {
 } from '../../shared/components/form'
 
 export const boardColors = {
-  blue: '#0079bf',
-  orange: '#d29034',
+  blue: '#0079BF',
+  orange: '#D29034',
   green: '#519839',
-  red: '#b04632',
-  purple: '#89609e',
-  pink: '#cd5a91',
-  lime: '#4bbf6b',
-  sky: '#00aecc',
-  grey: '#838c91'
+  red: '#B04632',
+  purple: '#89609E',
+  pink: '#CD5A91',
+  lime: '#4BBF6B',
+  sky: '#00AECC',
+  grey: '#838C91'
 }
 
 export const BackgroundPickerInput: FC<BaseInputProps> = props => {

@@ -22,17 +22,19 @@ export type BoardMutationDto = {
   prefs_background: string
 }
 
+const fields = ['name', 'desc', 'prefs'].join(',')
+
 export const boardService = {
   fetchAll: async () => {
     const { data } = await trelloClient.get<BoardDto[]>('/members/me/boards', {
-      params: {
-        fields: ['name', 'desc', 'prefs'].join(',')
-      }
+      params: { fields }
     })
     return data
   },
   fetchById: async (id: string) => {
-    const { data } = await trelloClient.get<BoardDto>(`/boards/${id}`)
+    const { data } = await trelloClient.get<BoardDto>(`/boards/${id}`, {
+      params: { fields }
+    })
     return data
   },
   create: async (boardMutationDto: BoardMutationDto) => {
@@ -42,11 +44,11 @@ export const boardService = {
     )
     return data
   },
-  update: async (boardMutationDto: BoardMutationDto) => {
-    const { data } = await trelloClient.put<BoardDto>(
-      `/boards/${boardMutationDto.id}`,
-      boardMutationDto
-    )
+  update: async ({ prefs_background, ...rest }: BoardMutationDto) => {
+    const { data } = await trelloClient.put<BoardDto>(`/boards/${rest.id}`, {
+      ...rest,
+      'prefs/background': prefs_background
+    })
     return data
   }
 }

@@ -14,7 +14,8 @@
     "yes": "Yes",
     "actions": "Actions",
     "deletePrompt": "Are you sure you want to delete this?",
-    "deleteConfirm": "Delete"
+    "deleteConfirm": "Delete",
+    "menu": "Menu"
   },
   "boards": {
     "createBoard": "Create new board",
