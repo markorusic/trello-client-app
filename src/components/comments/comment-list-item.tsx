@@ -14,6 +14,7 @@ import {
 import { UserIcon } from '../../shared/components/icons'
 import { Popconfirm } from '../../shared/components/popconfirm'
 import { deleteMutationOptions } from '../../shared/query-utils'
+import { useUser } from '../../query-hooks/user-hooks'
 
 dayjs.extend(relativeTime)
 
@@ -23,9 +24,12 @@ export interface CommentListItemProps {
 
 export const CommentListItem: FC<CommentListItemProps> = ({ comment }) => {
   const { t } = useTranslation()
+  const userQuery = useUser()
   const commentUpdateMutation = useCommentUpdateMutation()
   const commentDeleteMutation = useCommentDeleteMutation()
   const editableComment = useEditableText()
+
+  const enableActions = comment.memberCreator.id === userQuery.data?.id
 
   return (
     <div className="p-1 mb-3 flex flex-col">
@@ -50,8 +54,8 @@ export const CommentListItem: FC<CommentListItemProps> = ({ comment }) => {
           </span>
         </div>
       </div>
-      {/* TODO: check if current user is allowed to make actions */}
       <EditableText
+        disabled={!enableActions}
         as="textarea"
         className="px-2 bg-white rounded"
         controlledState={editableComment}
@@ -64,33 +68,34 @@ export const CommentListItem: FC<CommentListItemProps> = ({ comment }) => {
           })
         }
       />
-      {/* TODO: check if current user is allowed to make actions */}
-      <div className="flex my-2 items-baseline">
-        <span
-          className="cursor-pointer border-b border-gray-700 text-gray-700 text-xs"
-          onClick={event => {
-            event.preventDefault()
-            event.stopPropagation()
-            editableComment.setShowForm(v => !v)
-          }}
-        >
-          {editableComment.showForm ? t('commons.cancel') : t('commons.edit')}
-        </span>
-        <div className="mx-1">{'-'}</div>
-        <span className="cursor-pointer border-b border-gray-700 text-gray-700 text-xs">
-          <Popconfirm
-            title="comments.deleteCommentPrompt"
-            okText="comments.deleteCommentConfirm"
-            onConfirm={() =>
-              commentDeleteMutation.mutate(comment, {
-                ...deleteMutationOptions()
-              })
-            }
+      {enableActions && (
+        <div className="flex my-2 items-baseline">
+          <span
+            className="cursor-pointer border-b border-gray-700 text-gray-700 text-xs"
+            onClick={event => {
+              event.preventDefault()
+              event.stopPropagation()
+              editableComment.setShowForm(v => !v)
+            }}
           >
-            {t('commons.delete')}
-          </Popconfirm>
-        </span>
-      </div>
+            {editableComment.showForm ? t('commons.cancel') : t('commons.edit')}
+          </span>
+          <div className="mx-1">{'-'}</div>
+          <span className="cursor-pointer border-b border-gray-700 text-gray-700 text-xs">
+            <Popconfirm
+              title="comments.deleteCommentPrompt"
+              okText="comments.deleteCommentConfirm"
+              onConfirm={() =>
+                commentDeleteMutation.mutate(comment, {
+                  ...deleteMutationOptions()
+                })
+              }
+            >
+              {t('commons.delete')}
+            </Popconfirm>
+          </span>
+        </div>
+      )}
     </div>
   )
 }

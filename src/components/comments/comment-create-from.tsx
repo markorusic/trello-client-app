@@ -1,6 +1,6 @@
-import { uniqueId } from 'lodash'
 import { FC } from 'react'
 import { useCommentCreateMutation } from '../../query-hooks/comment-hooks'
+import { useUser } from '../../query-hooks/user-hooks'
 import { CommentMutationDto } from '../../services/comment-service'
 import { Form, TextArea } from '../../shared/components/form'
 import { createFormMutationOptions } from '../../shared/query-utils'
@@ -11,36 +11,39 @@ export interface CommentCreateFromProps {
 
 export const CommentCreateFrom: FC<CommentCreateFromProps> = ({ cardId }) => {
   const commentCreateMutation = useCommentCreateMutation()
+  const userQuery = useUser()
   return (
     <div>
-      <Form<CommentMutationDto>
-        initialValues={{
-          text: '',
-          cardId,
-          memberCreator: {
-            id: uniqueId('user'),
-            avatarUrl: null,
-            username: '...'
+      {userQuery.isSuccess && (
+        <Form<CommentMutationDto>
+          initialValues={{
+            text: '',
+            cardId,
+            memberCreator: {
+              id: userQuery.data.id,
+              avatarUrl: userQuery.data.avatarUrl,
+              username: userQuery.data.username
+            }
+          }}
+          validate={values => {
+            if (!values.text) {
+              return { text: '' }
+            }
+          }}
+          onSubmit={(values, actions) =>
+            commentCreateMutation.mutate(values, {
+              ...createFormMutationOptions(actions, 'comments.createError')
+            })
           }
-        }}
-        validate={values => {
-          if (!values.text) {
-            return { text: '' }
-          }
-        }}
-        onSubmit={(values, actions) =>
-          commentCreateMutation.mutate(values, {
-            ...createFormMutationOptions(actions, 'comments.createError')
-          })
-        }
-      >
-        <TextArea
-          submitOnEnter
-          name="text"
-          className="p-2 w-full rounded"
-          placeholder="comments.enterComment"
-        />
-      </Form>
+        >
+          <TextArea
+            submitOnEnter
+            name="text"
+            className="p-2 w-full rounded"
+            placeholder="comments.enterComment"
+          />
+        </Form>
+      )}
     </div>
   )
 }
