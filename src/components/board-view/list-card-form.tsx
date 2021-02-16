@@ -35,20 +35,12 @@ export const ListCardForm: FC<ListCardFormProps> = ({ listId, ...props }) => {
       }
       {...props}
     >
-      {form => (
-        <TextArea
-          name="name"
-          placeholder="cards.createNew"
-          containerClassName="mb-0"
-          onKeyDown={event => {
-            if (event.code === 'Enter' && !form.isSubmitting) {
-              event.preventDefault()
-              form.handleSubmit()
-              setTimeout(() => form.resetForm())
-            }
-          }}
-        />
-      )}
+      <TextArea
+        submitOnEnter
+        name="name"
+        placeholder="cards.createNew"
+        containerClassName="mb-0"
+      />
     </Form>
   )
 }

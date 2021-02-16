@@ -104,14 +104,19 @@ export const TextInput: FC<TextInputProps> = ({
   )
 }
 
-export type TextAreaProps = BaseInputProps & HTMLProps<HTMLTextAreaElement>
+export type TextAreaProps = BaseInputProps &
+  HTMLProps<HTMLTextAreaElement> & {
+    submitOnEnter?: boolean
+  }
 export const TextArea: FC<TextAreaProps> = ({
   containerClassName,
   placeholder = '',
+  submitOnEnter = false,
   ...props
 }) => {
   const { t } = useTranslation()
   const [field] = useField(props.name)
+  const form = useFormikContext()
   return (
     <FormInputContainer containerClassName={containerClassName} {...props}>
       <textarea
@@ -119,6 +124,13 @@ export const TextArea: FC<TextAreaProps> = ({
         {...field}
         {...props}
         placeholder={t(placeholder)}
+        onKeyDown={event => {
+          if (submitOnEnter && event.code === 'Enter' && !form.isSubmitting) {
+            event.preventDefault()
+            form.handleSubmit()
+            setTimeout(() => form.resetForm())
+          }
+        }}
       />
     </FormInputContainer>
   )

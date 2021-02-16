@@ -6,7 +6,12 @@
     "submit": "Submit",
     "name": "Name",
     "description": "Description",
-    "error": "An error occured!"
+    "successfulDelete": "Successfully deleted!",
+    "error": "An error occured!",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "yes": "Yes"
   },
   "boards": {
     "createBoard": "Create new board",
@@ -25,6 +30,13 @@
     "createNew": "Add another card",
     "createError": "An error occured while creating new card!",
     "enterName": "Enter name",
-    "enterDescription": "Add more detailed description"
+    "enterDescription": "Add more detailed description",
+    "comments": "Comments"
+  },
+  "comments": {
+    "enterComment": "Write a comment...",
+    "createError": "An error occured while creating new comment!",
+    "deleteCommentPrompt": "Are you sure?",
+    "deleteCommentConfirm": "Delete Comment"
   }
 }

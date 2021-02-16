@@ -1,12 +1,18 @@
-import classNames from 'classnames'
-import { Field, FieldProps } from 'formik'
 import { FC, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMeasure } from 'react-use'
+import { Field, FieldProps } from 'formik'
+import classNames from 'classnames'
 import { Form } from './form'
 
 export interface EditableTextProps {
   text: string
   onChange: (newValue: string) => void
+  controlledState?: {
+    showForm: boolean
+    setShowForm: React.Dispatch<React.SetStateAction<boolean>>
+  }
+  disabled?: boolean
   type?: string
   as?: string | React.ComponentType<FieldProps['field']>
   placeholder?: string
@@ -14,6 +20,11 @@ export interface EditableTextProps {
   containerClassName?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
+}
+
+export const useEditableText = (initialState = false) => {
+  const [showForm, setShowForm] = useState(initialState)
+  return { showForm, setShowForm }
 }
 
 export const EditableText: FC<EditableTextProps> = ({
@@ -24,27 +35,46 @@ export const EditableText: FC<EditableTextProps> = ({
   placeholder = '',
   className = '',
   containerClassName = '',
+  disabled = false,
+  controlledState = { showForm: undefined, setShowForm: undefined },
   ...props
 }) => {
   const { t } = useTranslation()
+  const [textRef, textSize] = useMeasure<HTMLDivElement>()
+  const fieldRef = useRef<HTMLElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const autofocusRef = useRef(!!text)
-  const [showUpdateForm, setShowUpdateForm] = useState(!text)
+
+  const innerState = useEditableText(!text)
+
+  const _showForm = controlledState.showForm ?? innerState.showForm
+  const _setShowForm = controlledState.setShowForm ?? innerState.setShowForm
+
+  const showForm = (_showForm || !text) && !disabled
 
   useEffect(() => {
     containerRef.current?.addEventListener('keydown', event => {
       if (event.key === 'Escape') {
-        setShowUpdateForm(false)
+        _setShowForm(false)
       }
     })
-  }, [])
+  }, [_setShowForm])
+
+  useEffect(() => {
+    if (showForm) {
+      const input = fieldRef.current as HTMLInputElement
+      if (input) {
+        input.select()
+      }
+    }
+  }, [showForm])
 
   return (
     <div
       ref={containerRef}
       className={classNames('break-all', containerClassName)}
     >
-      {showUpdateForm || !text ? (
+      {showForm ? (
         <Form<{ text: string }>
           initialValues={{ text }}
           validate={values => {
@@ -54,21 +84,25 @@ export const EditableText: FC<EditableTextProps> = ({
           }}
           onSubmit={values => {
             onChange(values.text)
-            setShowUpdateForm(false)
+            _setShowForm(false)
           }}
         >
           {form => (
             <Field
+              innerRef={fieldRef}
               className={classNames(
                 'rounded w-full outline-none border border-blue-300',
                 className
               )}
+              style={{
+                height: textSize.height > 0 ? textSize.height + 8 : undefined
+              }}
               as={as}
               type={type}
               name="text"
               placeholder={t(placeholder)}
               autoFocus={autofocusRef.current}
-              onBlur={() => setShowUpdateForm(!form.values.text)}
+              onBlur={() => _setShowForm(!form.values.text)}
               onKeyDown={(event: KeyboardEvent) => {
                 if (event.code === 'Enter' && !form.isSubmitting) {
                   event.preventDefault()
@@ -80,12 +114,19 @@ export const EditableText: FC<EditableTextProps> = ({
           )}
         </Form>
       ) : (
-        <h3
-          className={classNames('cursor-pointer hover:opacity-70', className)}
-          onClick={() => setShowUpdateForm(true)}
+        <div
+          ref={textRef}
+          className={classNames(
+            'whitespace-pre-wrap break-words',
+            {
+              'cursor-pointer hover:opacity-70': !disabled
+            },
+            className
+          )}
+          onClick={() => _setShowForm(true)}
         >
           {text}
-        </h3>
+        </div>
       )}
     </div>
   )

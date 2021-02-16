@@ -6,6 +6,7 @@ import classNames from 'classnames'
 export interface ModalProps {
   title?: string | ReactNode
   className?: string
+  contentClassName?: string
   style?: CSSProperties
   onClose: () => void
 }
@@ -13,6 +14,7 @@ export interface ModalProps {
 export const Modal: React.FC<ModalProps> = ({
   title = '',
   className = '',
+  contentClassName = '',
   style = {},
   onClose,
   children
@@ -36,14 +38,17 @@ export const Modal: React.FC<ModalProps> = ({
         >
           <div
             id={id}
-            className="bg-gray-200 border-0 rounded-lg shadow-lg relative flex flex-col w-full outline-none focus:outline-none"
+            className={classNames(
+              'bg-gray-200 border-0 rounded-lg shadow-lg relative flex flex-col outline-none focus:outline-none',
+              contentClassName
+            )}
           >
-            <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
-              <h3 className="text-2xl font-semibold break-all">
+            <div className="flex items-start justify-between px-2 py-1 border-b border-solid border-gray-300 rounded-t">
+              <div className="text-2xl font-semibold break-all flex-1">
                 {typeof title === 'string' ? t(title) : title}
-              </h3>
+              </div>
               <button
-                className="p-1 ml-auto bg-transparent border-0 text-black float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                className="p-1 bg-transparent border-0 text-black text-3xl leading-none font-semibold outline-none focus:outline-none"
                 onClick={() => onClose()}
               >
                 <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">

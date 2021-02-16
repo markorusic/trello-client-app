@@ -9,12 +9,18 @@ import {
 import { CardDto } from '../services/card-service'
 import { EditableText } from '../shared/components/editable-text'
 import { Modal } from '../shared/components/modal'
+import { CommentList } from '../components/comments/comment-list'
+import { CommentCreateFrom } from '../components/comments/comment-create-from'
+
+interface LocationState {
+  initialData?: CardDto
+}
 
 const CardPage = () => {
   const { t } = useTranslation()
   const { cardId } = useParams<{ cardId: string }>()
-  const location = useLocation<{ initialData?: CardDto }>()
-  const history = useHistory()
+  const location = useLocation<LocationState>()
+  const history = useHistory<LocationState>()
 
   const cardUpdateMutation = useCardUpdateMutation()
   const cardQuery = useCard(cardId, {
@@ -22,6 +28,7 @@ const CardPage = () => {
   })
 
   const updateCard = (card: CardDto) => {
+    history.replace({ state: { initialData: card } })
     queryClient.setQueryData([cardQueryKeys.card, cardId], card)
     cardUpdateMutation.mutate(card)
   }
@@ -29,6 +36,7 @@ const CardPage = () => {
   return (
     <Modal
       onClose={() => history.goBack()}
+      contentClassName="h-full overflow-auto"
       style={{ width: '600px' }}
       title={
         cardQuery.isSuccess ? (
@@ -43,16 +51,26 @@ const CardPage = () => {
         )
       }
     >
-      <div className="overflow-scroll">
+      <div>
         <h2 className="font-semibold">{t('commons.description')}</h2>
         {cardQuery.isSuccess ? (
-          <EditableText
-            as="textarea"
-            className="px-2 py-1"
-            placeholder="cards.enterDescription"
-            text={cardQuery.data.desc}
-            onChange={desc => updateCard({ ...cardQuery.data, desc })}
-          />
+          <div>
+            <EditableText
+              as="textarea"
+              className="px-2 py-1 bg-white rounded w-full"
+              placeholder="cards.enterDescription"
+              text={cardQuery.data.desc}
+              onChange={desc => updateCard({ ...cardQuery.data, desc })}
+            />
+
+            <div className="my-4">
+              <h2 className="font-semibold">{t('cards.comments')}</h2>
+              <div className="my-2">
+                <CommentCreateFrom cardId={cardQuery.data.id} />
+              </div>
+              <CommentList card={cardQuery.data} />
+            </div>
+          </div>
         ) : null}
       </div>
     </Modal>
