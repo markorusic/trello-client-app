@@ -1,4 +1,4 @@
-# Trello App Clone
+# Trello Clone App
 
 ## Project setup
 
