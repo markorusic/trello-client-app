@@ -55,7 +55,7 @@ const BoardPage = () => {
       </div>
 
       {boardQuery.isSuccess ? (
-        <div className="relative">
+        <div className="relative flex flex-grow">
           <BoradSettings
             board={boardQuery.data}
             style={{

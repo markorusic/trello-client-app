@@ -50,7 +50,7 @@ const CardPage = () => {
     <Modal
       onClose={() => history.goBack()}
       contentClassName="h-full overflow-auto"
-      style={{ width: '600px' }}
+      style={{ width: '800px' }}
       title={
         cardQuery.isSuccess ? (
           <EditableText
@@ -86,7 +86,7 @@ const CardPage = () => {
               </div>
             </div>
           </div>
-          <div className="w-40 border">
+          <div className="w-52 border">
             <h3 className="text-gray-600 font-medium uppercase text-sm">
               {t('commons.actions')}
             </h3>
