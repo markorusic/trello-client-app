@@ -35,8 +35,11 @@ export const useBoardCreateMutation = () =>
       getKey: () => boardQueryKeys.boards,
       mutationMapper: ({ prefs_background, ...rest }) => ({
         id: uniqueId(boardQueryKeys.boards),
-        prefs: { backgroundColor: prefs_background },
-        ...rest
+        ...rest,
+        prefs: {
+          backgroundColor: prefs_background,
+          backgroundBrightness: 'dark'
+        }
       })
     })
   })
@@ -46,7 +49,7 @@ export const useBoardStyle = (
   type: 'sm' | 'lg' = 'sm'
 ): CSSProperties => {
   const defaultBgColor = '#D1D5DA'
-  const defaultTextColor = 'black'
+  const defaultTextColor = 'white'
   if (!board) {
     return {
       backgroundColor: defaultBgColor,

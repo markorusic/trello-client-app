@@ -44,7 +44,6 @@ export const BoardForm: FC<BoardFormProps> = ({
         name="name"
         label="commons.name"
         placeholder="boards.enterName"
-        autoFocus
       />
       <TextArea
         name="desc"
