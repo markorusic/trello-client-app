@@ -30,7 +30,9 @@ export const BoardListItem: FC<BoardListItemProps> = ({ list, index }) => {
               className="flex justify-between items-center"
               {...draggableProvided.dragHandleProps}
             >
-              <ListTitle list={list} />
+              <div className="flex-1 pr-2">
+                <ListTitle list={list} />
+              </div>
               <Popconfirm
                 title="lists.archivePrompt"
                 okText="lists.archiveConfirm"

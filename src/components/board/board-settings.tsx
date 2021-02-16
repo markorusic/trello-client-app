@@ -7,28 +7,37 @@ import {
   useBoardUpdateMutation
 } from '../../query-hooks/board-hooks'
 import { BoardDto } from '../../services/board-service'
+import { XIcon } from '../../shared/components/icons'
 import { createFormMutationOptions } from '../../shared/query-utils'
 import { boardColors } from './background-picker-input'
 import { BoardForm } from './board-form'
 
 export interface BoradSettingsProps {
   board: BoardDto
+  onClose: () => void
   style?: CSSProperties
 }
 
 export const BoradSettings: FC<BoradSettingsProps> = ({
   board,
+  onClose,
   style = {}
 }) => {
   const { t } = useTranslation()
   const boardUpdateMutation = useBoardUpdateMutation()
   return (
     <div
-      className="bg-white p-4 rounded absolute top-0 bottom-0 text-black border border-gray-600 transition-all ease-in-out duration-300 z-10"
+      className="bg-white p-4 rounded absolute right-0 top-0 bottom-0 text-black border border-gray-600 transition-all ease-in-out duration-300 z-10"
       style={style}
     >
-      <div className="text-center mb-4 pb-4 border-b border-gray-600">
-        <h3>{t('commons.menu')}</h3>
+      <div className="text-center mb-2 pb-2 border-b border-gray-600 flex justify-between items-center">
+        <h3 className="flex-1 font-semibold">{t('commons.menu')}</h3>
+        <div
+          className="cursor-pointer hover:opacity-80"
+          onClick={() => onClose()}
+        >
+          <XIcon color="black" />
+        </div>
       </div>
       <div>
         <BoardForm

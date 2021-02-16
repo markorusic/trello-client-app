@@ -34,7 +34,7 @@ const BoardPage = () => {
   }
 
   return (
-    <div style={style} className="h-screen flex flex-col">
+    <div style={style} className=" h-screen flex flex-col">
       <TopBar />
       <div className="mb-2 py-1 px-2 border-b border-white flex items-center justify-between">
         {boardQuery.isSuccess && (
@@ -55,12 +55,14 @@ const BoardPage = () => {
       </div>
 
       {boardQuery.isSuccess ? (
-        <div className="relative flex flex-grow">
+        <div className="relative flex flex-grow overflow-auto">
           <BoradSettings
             board={boardQuery.data}
+            onClose={() => setShowSettings(false)}
             style={{
               width: 325,
-              right: showSettings ? 0 : -330
+              opacity: showSettings ? 1 : 0,
+              pointerEvents: showSettings ? 'all' : 'none'
             }}
           />
           <BoardView board={boardQuery.data} />
