@@ -16,6 +16,7 @@ export interface BoardDto {
 }
 
 export type BoardMutationDto = {
+  id?: string
   name: string
   desc: string
   prefs_background: string
@@ -37,6 +38,13 @@ export const boardService = {
   create: async (boardMutationDto: BoardMutationDto) => {
     const { data } = await trelloClient.post<BoardDto>(
       '/boards',
+      boardMutationDto
+    )
+    return data
+  },
+  update: async (boardMutationDto: BoardMutationDto) => {
+    const { data } = await trelloClient.put<BoardDto>(
+      `/boards/${boardMutationDto.id}`,
       boardMutationDto
     )
     return data

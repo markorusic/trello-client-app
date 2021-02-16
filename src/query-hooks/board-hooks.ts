@@ -29,20 +29,23 @@ export const useBoard = (id: string) => {
   )
 }
 
-export const useBoardCreateMutation = () =>
-  useMutation(boardService.create, {
-    ...collectionOptimisticUpdate<BoardMutationDto, BoardDto>({
-      getKey: () => boardQueryKeys.boards,
-      mutationMapper: ({ prefs_background, ...rest }) => ({
-        id: uniqueId(boardQueryKeys.boards),
-        ...rest,
-        prefs: {
-          backgroundColor: prefs_background,
-          backgroundBrightness: 'dark'
-        }
-      })
-    })
+const mutationOptions = collectionOptimisticUpdate<BoardMutationDto, BoardDto>({
+  getKey: () => boardQueryKeys.boards,
+  mutationMapper: ({ prefs_background, ...rest }) => ({
+    id: uniqueId(boardQueryKeys.boards),
+    ...rest,
+    prefs: {
+      backgroundColor: prefs_background,
+      backgroundBrightness: 'dark'
+    }
   })
+})
+
+export const useBoardCreateMutation = () =>
+  useMutation(boardService.create, mutationOptions)
+
+export const useBoardUpdateMutation = () =>
+  useMutation(boardService.update, mutationOptions)
 
 export const useBoardStyle = (
   board: BoardDto | undefined,
