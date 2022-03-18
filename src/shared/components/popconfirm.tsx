@@ -41,10 +41,8 @@ export const Popconfirm: FC<PopconfirmProps> = ({
           </div>
           <div className="mt-2">
             <Button
-              px={2}
-              py={1}
-              text="xs"
-              bgColor="red"
+              size="xs"
+              variant="danger"
               onClick={() => {
                 setShowPopup(false)
                 setTimeout(() => onConfirm(), 0)

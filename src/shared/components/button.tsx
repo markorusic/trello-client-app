@@ -1,25 +1,38 @@
-import { ButtonHTMLAttributes, DetailedHTMLProps } from 'react'
-import classNames from 'classnames'
+import cx from 'classnames'
 
-export interface ButtonProps
-  extends DetailedHTMLProps<
-    ButtonHTMLAttributes<HTMLButtonElement>,
-    HTMLButtonElement
-  > {
-  bgColor?: string
-  textColor?: string
+export type ButtonVariant = 'primary' | 'danger' | 'success'
+
+export type ButtonSize = 'md' | 'sm' | 'xs'
+
+export const baseButtonStyle = `
+  font-bold
+  rounded shadow outline-none
+  transition duration-500
+  focus:outline-none mr-1 mb-1
+  hover:shadow-lg
+`
+
+export const buttonVariants: Record<ButtonVariant, string> = {
+  primary: cx(baseButtonStyle, 'bg-blue-500 text-white', 'hover:bg-blue-600'),
+  danger: cx(baseButtonStyle, 'bg-red-500 text-white', 'hover:bg-red-600'),
+  success: cx(baseButtonStyle, 'bg-green-500 text-white', 'hover:bg-green-600')
+}
+
+export const buttonSizes: Record<ButtonSize, string> = {
+  md: 'text-md px-4 py-2',
+  sm: 'text-sm px-4 py-2',
+  xs: 'text-xs px-2 py-1'
+}
+
+export type ButtonProps = JSX.IntrinsicElements['button'] & {
+  variant?: ButtonVariant
+  size?: ButtonSize
   loading?: boolean
-  px?: number
-  py?: number
-  text?: string
 }
 
 export const Button: React.FC<ButtonProps> = ({
-  bgColor = 'blue',
-  textColor = 'white',
-  px = 3,
-  py = 2,
-  text = 'sm',
+  variant = 'primary',
+  size = 'sm',
   loading = false,
   className,
   ...props
@@ -27,24 +40,11 @@ export const Button: React.FC<ButtonProps> = ({
   const disabled = props.disabled ?? loading
   return (
     <button
-      className={classNames(
-        `bg-${bgColor}-500 text-${textColor}
-        font-bold
-        text-${text}
-        px-${px} py-${py}
-        rounded
-        shadow
-        hover:shadow-lg
-        hover:bg-${bgColor}-600
-        outline-none
-        focus:outline-none mr-1 mb-1
-        transition duration-500
-        ${disabled ? 'opacity-50' : ''}
-        `,
-        className
-      )}
-      {...props}
       disabled={disabled}
+      className={cx(className, buttonVariants[variant], buttonSizes[size], {
+        'opacity-50': disabled
+      })}
+      {...props}
     />
   )
 }

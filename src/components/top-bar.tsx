@@ -10,7 +10,7 @@ export interface TopBarProps {
 export const TopBar: FC<TopBarProps> = ({ title }) => {
   const userQuery = useUser()
   return (
-    <div className="py-1 px-2 flex justify-between items-center border-b border-white">
+    <div className="h-12 py-1 px-2 flex justify-between items-center border-b border-white">
       <div className="flex items-center">
         <div className="cursor-pointer hover:opacity-80 mr-2">
           <Link className="block" to="">
@@ -22,7 +22,7 @@ export const TopBar: FC<TopBarProps> = ({ title }) => {
       <div className="flex items-center">
         {userQuery.isSuccess ? (
           <>
-            <div className="bg-gray-400 w-10 h-10 rounded-full flex justify-center items-center mr-2">
+            <div className="bg-gray-400 w-9 h-9 rounded-full flex justify-center items-center mr-2">
               <img
                 className="w-full h-full rounded-full"
                 src={userQuery.data.avatarUrl}

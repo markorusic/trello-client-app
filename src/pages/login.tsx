@@ -1,5 +1,12 @@
+import React from 'react'
+import cx from 'classnames'
 import { useAuth } from '../components/auth-provider'
 import { env } from '../config/env'
+import {
+  Button,
+  buttonSizes,
+  buttonVariants
+} from '../shared/components/button'
 
 export const LoginPage = () => {
   const auth = useAuth()
@@ -24,7 +31,7 @@ export const LoginPage = () => {
         </div>
 
         <a
-          className="px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition-colors"
+          className={cx(buttonVariants.primary, buttonSizes.sm)}
           target="_blank"
           rel="noopener noreferrer"
           href={`https://trello.com/1/authorize?${params}`}
@@ -56,12 +63,14 @@ export const LoginPage = () => {
             />
           </div>
           <div className="my-2">
-            <button
-              className="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition-colors w-full"
+            <Button
               type="submit"
+              className="w-full"
+              variant="success"
+              size="md"
             >
               Login
-            </button>
+            </Button>
           </div>
         </form>
 
