@@ -3,10 +3,18 @@ import { Location } from 'history'
 import BoardPage from './pages/board-page'
 import { BoardsPage } from './pages/boards-page'
 import CardPage from './pages/card-page'
+import { LoginPage } from './pages/login'
+import { useAuth } from './components/auth-provider'
 
 const App = () => {
+  const auth = useAuth()
   const location = useLocation<{ background: Location }>()
   const background = location.state?.background
+
+  if (!auth.isAuthenticated) {
+    return <LoginPage />
+  }
+
   return (
     <>
       <Switch location={background ?? location}>

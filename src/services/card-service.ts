@@ -1,4 +1,4 @@
-import { trelloClient } from '../config/trello-client'
+import { trelloClient } from '../components/auth-provider'
 
 export interface CardDto {
   id: string
