@@ -69,6 +69,7 @@ const createTrelloClient = () => {
     return config
   }
   client.interceptors.request.use(authParamsInterceptor)
+  // TODO: add 401 logut interceptor
   return client
 }
 

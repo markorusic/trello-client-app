@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, useEffect, useRef } from 'react'
+import { CSSProperties, ReactNode, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { uniqueId } from 'lodash'
 import cx from 'classnames'
@@ -37,20 +37,6 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const { t } = useTranslation()
   const { current: id } = useRef(uniqueId('modal'))
-  // const modalContentRef = useClickOutside(onClose)
-
-  useEffect(() => {
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose()
-      }
-    }
-    document.addEventListener('keydown', closeOnEscape)
-    return () => {
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
     <>
@@ -69,7 +55,6 @@ export const Modal: React.FC<ModalProps> = ({
         >
           <div
             id={id}
-            // ref={modalContentRef}
             className={cx(
               'bg-gray-200 border-0 rounded-lg shadow-lg relative flex flex-col outline-none focus:outline-none',
               contentClassName
