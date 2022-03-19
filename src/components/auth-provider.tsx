@@ -1,6 +1,12 @@
-import { createContext, FC, useContext, useState } from 'react'
-import axios from 'axios'
+import { createContext, FC, useContext } from 'react'
+import axios, { AxiosRequestConfig } from 'axios'
 import { env } from '../config/env'
+import { createStoredValue } from '../shared/stored-value'
+
+const [token, useTokenState] = createStoredValue<string | undefined>(
+  'trello-user-token',
+  undefined
+)
 
 export const trelloPopupLogin = (): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -50,18 +56,23 @@ export const trelloPopupLogin = (): Promise<string> => {
   })
 }
 
-const createTrelloClient = (token: string | undefined) =>
-  axios.create({
-    baseURL: env.TRELLO_API_BASE_URL,
-    params: {
-      key: env.TRELLO_API_KEY,
-      token
-    }
+const createTrelloClient = () => {
+  const client = axios.create({
+    baseURL: env.TRELLO_API_BASE_URL
   })
+  const authParamsInterceptor = (config: AxiosRequestConfig) => {
+    config.params = {
+      ...config.params,
+      key: env.TRELLO_API_KEY,
+      token: token.get()
+    }
+    return config
+  }
+  client.interceptors.request.use(authParamsInterceptor)
+  return client
+}
 
-export let trelloClient = createTrelloClient(
-  '38977732541122fce2ed99ffbc91479fff8a7315e230d3cdf4509084ed8dc65e'
-)
+export const trelloClient = createTrelloClient()
 
 type AuthContextValue = {
   token: string | undefined
@@ -72,19 +83,16 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export const AuthProvider: FC = ({ children }) => {
-  const [authToken, setAuthToken] = useState<string | undefined>(
-    '38977732541122fce2ed99ffbc91479fff8a7315e230d3cdf4509084ed8dc65e'
-  )
+  const [token, setToken] = useTokenState()
 
   const value: AuthContextValue = {
-    token: authToken,
-    isAuthenticated: !!authToken,
+    token,
+    isAuthenticated: !!token,
     logout: () => {
-      setAuthToken(undefined)
+      setToken(undefined)
     },
     login: (token: string) => {
-      trelloClient = createTrelloClient(token)
-      setAuthToken(token)
+      setToken(token)
     }
   }
 

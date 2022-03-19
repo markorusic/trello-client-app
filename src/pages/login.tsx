@@ -11,8 +11,7 @@ export const LoginPage = () => {
 
         <div className="my-4">
           <p className="mb-2">
-            Your data is will not be stored or sent anywhere. When you refresh
-            the page it will be gone and you will be logged out.
+            Your data is will not be stored or sent anywhere.
           </p>
           <p>
             Keep in mind that every change that you make here will reflect on

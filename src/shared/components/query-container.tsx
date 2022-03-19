@@ -1,6 +1,7 @@
 import { DetailedHTMLProps, HTMLAttributes } from 'react'
 import { QueryObserverResult } from 'react-query'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 interface QueryContainerProps
   extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
@@ -13,6 +14,7 @@ export const QueryContainer: React.FC<QueryContainerProps> = ({
   className,
   ...props
 }) => {
+  const { t } = useTranslation()
   return (
     <div className={classNames('relative', className)} {...props}>
       {query.status !== 'loading' && query.isFetching && (
@@ -21,11 +23,11 @@ export const QueryContainer: React.FC<QueryContainerProps> = ({
         </span>
       )}
       {query.status === 'loading' && (
-        <span className="text-yellow-600">Loading...</span>
+        <span className="text-yellow-600">{t('commons.loading')}...</span>
       )}
       {query.status === 'error' && (
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded relative">
-          <span className="block sm:inline">{'query.error'}</span>
+          <span className="block sm:inline">{t('commons.error')}</span>
         </div>
       )}
       {query.status === 'success' && children}
