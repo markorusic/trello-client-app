@@ -34,9 +34,9 @@ export const BoardListItem: FC<BoardListItemProps> = ({ list, index }) => {
                 <ListTitle list={list} />
               </div>
               <Popconfirm
-                title="lists.archivePrompt"
+                title="lists.archiveConfirm"
+                description="lists.archivePrompt"
                 okText="lists.archiveConfirm"
-                position="bottom"
                 onConfirm={() => listDeleteMutation.mutate(list)}
               >
                 <div className="text-xl cursor-pointer hover:opacity-80">

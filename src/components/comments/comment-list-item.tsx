@@ -83,9 +83,9 @@ export const CommentListItem: FC<CommentListItemProps> = ({ comment }) => {
           <div className="mx-1">{'-'}</div>
           <span className="cursor-pointer border-b border-gray-700 text-gray-700 text-xs">
             <Popconfirm
-              title="comments.deleteCommentPrompt"
+              title="comments.deleteCommentConfirm"
+              description="comments.deleteCommentPrompt"
               okText="comments.deleteCommentConfirm"
-              position="bottom"
               onConfirm={() =>
                 commentDeleteMutation.mutate(comment, {
                   ...deleteMutationOptions()

@@ -93,9 +93,10 @@ const CardPage = () => {
             <ul>
               <li>
                 <Popconfirm
-                  title="commons.deletePrompt"
-                  okText="commons.deleteConfirm"
-                  position="bottom"
+                  title="cards.deleteConfirm"
+                  description="commons.deletePrompt"
+                  okText="cards.deleteConfirm"
+                  positionX="left"
                   onConfirm={() => deleteCard(cardQuery.data)}
                 >
                   <div className="flex items-center rounded bg-gray-200 text-black p-2 text-sm hover:bg-gray-300 transition-colors">

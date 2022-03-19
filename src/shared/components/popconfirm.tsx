@@ -3,50 +3,67 @@ import { useTranslation } from 'react-i18next'
 import cx from 'classnames'
 import { Button } from './button'
 import { XIcon } from './icons'
+import { useMeasure } from 'react-use'
+import { CloseIcon } from './modal'
 
-export interface PopconfirmProps {
+export type PopconfirmProps = {
   title: string
   onConfirm: () => void
+  description?: string
   okText?: string
-  position?: 'top' | 'bottom'
+  positionY?: 'top' | 'bottom'
+  positionX?: 'left' | 'right'
   style?: CSSProperties
 }
 
 export const Popconfirm: FC<PopconfirmProps> = ({
   title,
+  description,
   onConfirm,
   okText = 'commons.yes',
-  position = 'top',
+  positionY = 'bottom',
+  positionX = 'right',
   style = {},
   children
 }) => {
   const { t } = useTranslation()
+  const [textRef, textSize] = useMeasure<HTMLDivElement>()
   const [showPopup, setShowPopup] = useState(false)
+
   return (
     <div className="relative">
       {showPopup ? (
         <div
-          style={style}
+          style={{
+            minWidth: 300,
+            ...style,
+            ...(positionY === 'top'
+              ? { bottom: textSize.height + 4 }
+              : { top: textSize.height + 4 }),
+            ...(positionX === 'left' ? { right: 8 } : { left: 8 })
+          }}
           className={cx(
-            'absolute p-3 w-56 rounded shadow-xl bg-white border border-gray-300 flex flex-col cursor-default',
-            {
-              'bottom-6': position === 'top',
-              'top-6': position === 'bottom'
-            }
+            'absolute right-0 p-2 cursor-default z-50',
+            'rounded shadow-xl bg-white border border-gray-300 text-sm'
           )}
         >
-          <div className="flex text-gray-600 justify-between w-full">
-            <div className="flex flex-1 text-base">{t(title)}</div>
-            <div
-              className="cursor-pointer text-sm"
-              onClick={() => setShowPopup(false)}
-            >
-              <XIcon color="black" />
+          <div className="flex justify-between items-center py-2 border-b border-gray-200 text-gray-600">
+            <div className="text-center flex-1">{t(title)}</div>
+            <div className="cursor-pointer" onClick={() => setShowPopup(false)}>
+              <XIcon color="gray-600" size={5} />
             </div>
           </div>
-          <div className="mt-2">
+
+          {description ? (
+            <div className="flex justify-between items-center py-2">
+              <div className="">{t(description)}</div>
+            </div>
+          ) : null}
+
+          <div className="py-2 text-center">
             <Button
-              size="xs"
+              className="w-full"
+              size="md"
               variant="danger"
               onClick={() => {
                 setShowPopup(false)
@@ -58,7 +75,11 @@ export const Popconfirm: FC<PopconfirmProps> = ({
           </div>
         </div>
       ) : null}
-      <div className="cursor-pointer" onClick={() => setShowPopup(v => !v)}>
+      <div
+        ref={textRef}
+        className="cursor-pointer select-none"
+        onClick={() => setShowPopup(v => !v)}
+      >
         {children}
       </div>
     </div>

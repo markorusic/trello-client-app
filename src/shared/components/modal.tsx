@@ -1,6 +1,5 @@
-import { CSSProperties, ReactNode, useRef } from 'react'
+import { CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { uniqueId } from 'lodash'
 import cx from 'classnames'
 import { Dialog } from '@reach/dialog'
 import Portal from '@reach/portal'
@@ -47,6 +46,7 @@ export const Modal: React.FC<ModalProps> = ({
         onDismiss={onClose}
         className={cx('relative p-0 rounded-lg ', className)}
         style={{ minWidth: '400px', ...style }}
+        aria-label="dialog"
       >
         <div
           className={cx(
