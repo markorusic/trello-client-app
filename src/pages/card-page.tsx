@@ -86,8 +86,8 @@ const CardPage = () => {
               </div>
             </div>
           </div>
-          <div className="w-52 border">
-            <h3 className="text-gray-600 font-medium uppercase text-sm">
+          <div className="w-52">
+            <h3 className="text-gray-600 font-medium uppercase text-sm mb-1">
               {t('commons.actions')}
             </h3>
             <ul>
@@ -98,7 +98,7 @@ const CardPage = () => {
                   position="bottom"
                   onConfirm={() => deleteCard(cardQuery.data)}
                 >
-                  <div className="flex items-center bg-gray-300 text-black p-2 text-sm">
+                  <div className="flex items-center rounded bg-gray-200 text-black p-2 text-sm hover:bg-gray-300 transition-colors">
                     <TrashIcon color="black" />
                     <h3 className="ml-2">{t('commons.delete')}</h3>
                   </div>

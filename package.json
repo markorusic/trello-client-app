@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reach/dialog": "^0.16.2",
+    "@reach/portal": "^0.16.2",
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "dayjs": "^1.10.4",

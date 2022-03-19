@@ -2,6 +2,9 @@ import { CSSProperties, ReactNode, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { uniqueId } from 'lodash'
 import cx from 'classnames'
+import { Dialog } from '@reach/dialog'
+import Portal from '@reach/portal'
+import '@reach/dialog/styles.css'
 
 export const CloseIcon = () => {
   return (
@@ -36,51 +39,37 @@ export const Modal: React.FC<ModalProps> = ({
   children
 }) => {
   const { t } = useTranslation()
-  const { current: id } = useRef(uniqueId('modal'))
 
   return (
-    <>
-      <div
-        className="justify-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-        onClick={event => {
-          // @ts-ignore
-          if (!event.target.closest(`#${id}`)) {
-            onClose()
-          }
-        }}
+    <Portal>
+      <Dialog
+        isOpen
+        onDismiss={onClose}
+        className={cx('relative p-0 rounded-lg ', className)}
+        style={{ minWidth: '400px', ...style }}
       >
         <div
-          className={cx('relative my-6 w-auto mx-auto', className)}
-          style={{ minWidth: '400px', ...style }}
+          className={cx(
+            'bg-gray-100 border-0 rounded-lg shadow-lg relative flex flex-col outline-none focus:outline-none',
+            contentClassName
+          )}
         >
-          <div
-            id={id}
-            className={cx(
-              'bg-gray-200 border-0 rounded-lg shadow-lg relative flex flex-col outline-none focus:outline-none',
-              contentClassName
-            )}
-          >
-            <div className="flex items-start justify-between px-5 py-2 border-b border-solid border-gray-300 rounded-t">
-              <div className="text-xl font-bold break-all flex-1">
-                {typeof title === 'string' ? t(title) : title}
-              </div>
-              <button
-                className="p-1 h-full bg-transparent border-0 text-black text-3xl leading-none font-semibold outline-none focus:outline-none"
-                onClick={() => onClose()}
-              >
-                <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-                  <CloseIcon />
-                </span>
-              </button>
+          <div className="flex items-start justify-between px-5 py-2 border-b border-solid border-gray-300 rounded-t">
+            <div className="text-xl font-bold break-all flex-1">
+              {typeof title === 'string' ? t(title) : title}
             </div>
-            <div className="relative p-5 flex-auto">{children}</div>
+            <button
+              className="p-1 h-full bg-transparent border-0 text-black text-3xl leading-none font-semibold outline-none focus:outline-none"
+              onClick={() => onClose()}
+            >
+              <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+                <CloseIcon />
+              </span>
+            </button>
           </div>
+          <div className="relative p-5 flex-auto">{children}</div>
         </div>
-      </div>
-      <div
-        className="opacity-25 fixed inset-0 z-40 bg-black"
-        onClick={() => onClose()}
-      />
-    </>
+      </Dialog>
+    </Portal>
   )
 }
