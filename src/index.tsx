@@ -12,13 +12,13 @@ initI18n()
 
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
+    <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
+        <AuthProvider>
           <App />
-        </QueryClientProvider>
+        </AuthProvider>
       </BrowserRouter>
-    </AuthProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
   document.getElementById('root')
 )

@@ -1,5 +1,6 @@
 import { createContext, FC, useContext } from 'react'
-import axios, { AxiosRequestConfig } from 'axios'
+import { useQueryClient } from 'react-query'
+import axios from 'axios'
 import { env } from '../config/env'
 import { createStoredValue } from '../shared/stored-value'
 
@@ -60,16 +61,24 @@ const createTrelloClient = () => {
   const client = axios.create({
     baseURL: env.TRELLO_API_BASE_URL
   })
-  const authParamsInterceptor = (config: AxiosRequestConfig) => {
+  client.interceptors.request.use(config => {
     config.params = {
       ...config.params,
       key: env.TRELLO_API_KEY,
       token: token.get()
     }
     return config
-  }
-  client.interceptors.request.use(authParamsInterceptor)
-  // TODO: add 401 logut interceptor
+  })
+  client.interceptors.response.use(
+    r => r,
+    err => {
+      if (err?.response?.status === 401) {
+        token.clear()
+        window.location.reload()
+      }
+      return Promise.reject(err)
+    }
+  )
   return client
 }
 
@@ -84,6 +93,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export const AuthProvider: FC = ({ children }) => {
+  const queryClient = useQueryClient()
   const [token, setToken] = useTokenState()
 
   const value: AuthContextValue = {
@@ -94,6 +104,7 @@ export const AuthProvider: FC = ({ children }) => {
     },
     login: (token: string) => {
       setToken(token)
+      queryClient.clear()
     }
   }
 
