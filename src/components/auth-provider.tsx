@@ -50,7 +50,7 @@ export const trelloPopupLogin = (): Promise<string> => {
   })
 }
 
-const createTrelloClinet = (token: string | undefined) =>
+const createTrelloClient = (token: string | undefined) =>
   axios.create({
     baseURL: env.TRELLO_API_BASE_URL,
     params: {
@@ -59,7 +59,9 @@ const createTrelloClinet = (token: string | undefined) =>
     }
   })
 
-export let trelloClient = createTrelloClinet(undefined)
+export let trelloClient = createTrelloClient(
+  '38977732541122fce2ed99ffbc91479fff8a7315e230d3cdf4509084ed8dc65e'
+)
 
 type AuthContextValue = {
   token: string | undefined
@@ -70,7 +72,9 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export const AuthProvider: FC = ({ children }) => {
-  const [authToken, setAuthToken] = useState<string | undefined>(undefined)
+  const [authToken, setAuthToken] = useState<string | undefined>(
+    '38977732541122fce2ed99ffbc91479fff8a7315e230d3cdf4509084ed8dc65e'
+  )
 
   const value: AuthContextValue = {
     token: authToken,
@@ -79,7 +83,7 @@ export const AuthProvider: FC = ({ children }) => {
       setAuthToken(undefined)
     },
     login: (token: string) => {
-      trelloClient = createTrelloClinet(token)
+      trelloClient = createTrelloClient(token)
       setAuthToken(token)
     }
   }

@@ -1,7 +1,23 @@
-import { CSSProperties, ReactNode, useRef } from 'react'
+import { CSSProperties, ReactNode, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { uniqueId } from 'lodash'
-import classNames from 'classnames'
+import cx from 'classnames'
+
+export const CloseIcon = () => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+    >
+      <path
+        fillRule="evenodd"
+        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+        clipRule="evenodd"
+      />
+    </svg>
+  )
+}
 
 export interface ModalProps {
   title?: string | ReactNode
@@ -21,6 +37,21 @@ export const Modal: React.FC<ModalProps> = ({
 }) => {
   const { t } = useTranslation()
   const { current: id } = useRef(uniqueId('modal'))
+  // const modalContentRef = useClickOutside(onClose)
+
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onClose()
+      }
+    }
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <>
       <div
@@ -33,36 +64,27 @@ export const Modal: React.FC<ModalProps> = ({
         }}
       >
         <div
-          className={classNames('relative my-6 w-auto mx-auto', className)}
+          className={cx('relative my-6 w-auto mx-auto', className)}
           style={{ minWidth: '400px', ...style }}
         >
           <div
             id={id}
-            className={classNames(
+            // ref={modalContentRef}
+            className={cx(
               'bg-gray-200 border-0 rounded-lg shadow-lg relative flex flex-col outline-none focus:outline-none',
               contentClassName
             )}
           >
-            <div className="flex items-start justify-between px-2 py-1 border-b border-solid border-gray-300 rounded-t">
-              <div className="text-2xl font-semibold break-all flex-1">
+            <div className="flex items-start justify-between px-5 py-2 border-b border-solid border-gray-300 rounded-t">
+              <div className="text-xl font-bold break-all flex-1">
                 {typeof title === 'string' ? t(title) : title}
               </div>
               <button
-                className="p-1 bg-transparent border-0 text-black text-3xl leading-none font-semibold outline-none focus:outline-none"
+                className="p-1 h-full bg-transparent border-0 text-black text-3xl leading-none font-semibold outline-none focus:outline-none"
                 onClick={() => onClose()}
               >
                 <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <CloseIcon />
                 </span>
               </button>
             </div>

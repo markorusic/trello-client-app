@@ -16,7 +16,7 @@ const App = () => {
   }
 
   return (
-    <>
+    <div className="bg-gray-100 min-h-screen">
       <Switch location={background ?? location}>
         <Route exact path="/">
           <BoardsPage />
@@ -32,7 +32,7 @@ const App = () => {
       <Route path="/board/:boardId/cards/:cardId">
         <CardPage />
       </Route>
-    </>
+    </div>
   )
 }
 

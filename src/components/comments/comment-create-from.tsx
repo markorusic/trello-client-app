@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { useCommentCreateMutation } from '../../query-hooks/comment-hooks'
 import { useUser } from '../../query-hooks/user-hooks'
 import { CommentMutationDto } from '../../services/comment-service'
-import { Form, TextArea } from '../../shared/components/form'
+import { Form, TextInput } from '../../shared/components/form'
 import { createFormMutationOptions } from '../../shared/query-utils'
 
 export interface CommentCreateFromProps {
@@ -36,12 +36,7 @@ export const CommentCreateFrom: FC<CommentCreateFromProps> = ({ cardId }) => {
             })
           }
         >
-          <TextArea
-            submitOnEnter
-            name="text"
-            className="p-2 w-full rounded"
-            placeholder="comments.enterComment"
-          />
+          <TextInput name="text" placeholder="comments.enterComment" />
         </Form>
       )}
     </div>

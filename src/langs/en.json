@@ -15,7 +15,9 @@
     "actions": "Actions",
     "deletePrompt": "Are you sure you want to delete this?",
     "deleteConfirm": "Delete",
-    "menu": "Menu"
+    "menu": "Menu",
+    "account": "Account",
+    "logout": "Log Out"
   },
   "boards": {
     "createBoard": "Create new board",

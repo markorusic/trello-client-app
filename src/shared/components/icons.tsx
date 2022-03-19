@@ -1,5 +1,5 @@
-import classNames from 'classnames'
 import { FC, ReactElement } from 'react'
+import cx from 'classnames'
 
 export interface IconProps {
   containerClassName?: string
@@ -14,10 +14,7 @@ export const createIconComponent = (icon: ReactElement): FC<IconProps> => ({
 }) => {
   return (
     <div
-      className={classNames(
-        `w-${size} h-${size} text-${color}`,
-        containerClassName
-      )}
+      className={cx(`w-${size} h-${size} text-${color}`, containerClassName)}
     >
       {icon}
     </div>

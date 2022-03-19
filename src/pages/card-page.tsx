@@ -96,7 +96,6 @@ const CardPage = () => {
                   title="commons.deletePrompt"
                   okText="commons.deleteConfirm"
                   position="bottom"
-                  style={{ right: 0, top: 40 }}
                   onConfirm={() => deleteCard(cardQuery.data)}
                 >
                   <div className="flex items-center bg-gray-300 text-black p-2 text-sm">

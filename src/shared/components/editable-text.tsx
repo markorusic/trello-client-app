@@ -2,8 +2,8 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMeasure } from 'react-use'
 import { Field, FieldProps } from 'formik'
-import classNames from 'classnames'
-import { Form } from './form'
+import cx from 'classnames'
+import { Form, textInputStyle } from './form'
 
 export interface EditableTextProps {
   text: string
@@ -70,10 +70,7 @@ export const EditableText: FC<EditableTextProps> = ({
   }, [showForm])
 
   return (
-    <div
-      ref={containerRef}
-      className={classNames('break-all', containerClassName)}
-    >
+    <div ref={containerRef} className={cx('break-all', containerClassName)}>
       {showForm ? (
         <Form<{ text: string }>
           initialValues={{ text }}
@@ -90,10 +87,7 @@ export const EditableText: FC<EditableTextProps> = ({
           {form => (
             <Field
               innerRef={fieldRef}
-              className={classNames(
-                'rounded w-full outline-none border border-blue-300',
-                className
-              )}
+              className={cx(textInputStyle, className)}
               style={{
                 height: textSize.height > 0 ? textSize.height + 8 : undefined
               }}
@@ -116,7 +110,7 @@ export const EditableText: FC<EditableTextProps> = ({
       ) : (
         <div
           ref={textRef}
-          className={classNames(
+          className={cx(
             'whitespace-pre-wrap break-words',
             {
               'cursor-pointer hover:opacity-70': !disabled

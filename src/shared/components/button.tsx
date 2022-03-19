@@ -5,7 +5,7 @@ export type ButtonVariant = 'primary' | 'danger' | 'success'
 export type ButtonSize = 'md' | 'sm' | 'xs'
 
 export const baseButtonStyle = `
-  font-bold
+  font-semibold
   rounded shadow outline-none
   transition duration-500
   focus:outline-none mr-1 mb-1
@@ -30,13 +30,13 @@ export type ButtonProps = JSX.IntrinsicElements['button'] & {
   loading?: boolean
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = ({
   variant = 'primary',
   size = 'sm',
   loading = false,
   className,
   ...props
-}) => {
+}: ButtonProps) => {
   const disabled = props.disabled ?? loading
   return (
     <button

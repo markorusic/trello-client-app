@@ -1,5 +1,6 @@
 import { CSSProperties, FC, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import cx from 'classnames'
 import { Button } from './button'
 import { XIcon } from './icons'
 
@@ -26,9 +27,13 @@ export const Popconfirm: FC<PopconfirmProps> = ({
       {showPopup ? (
         <div
           style={style}
-          className={`${
-            position === 'top' ? 'bottom' : 'top'
-          }-6 absolute p-3 w-56 rounded shadow-xl bg-white border border-gray-300 flex flex-col cursor-default`}
+          className={cx(
+            'absolute p-3 w-56 rounded shadow-xl bg-white border border-gray-300 flex flex-col cursor-default',
+            {
+              'bottom-6': position === 'top',
+              'top-6': position === 'bottom'
+            }
+          )}
         >
           <div className="flex text-gray-600 justify-between w-full">
             <div className="flex flex-1 text-base">{t(title)}</div>

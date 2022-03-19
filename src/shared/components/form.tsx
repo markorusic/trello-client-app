@@ -48,7 +48,7 @@ export const FormInputContainer: FC<BaseInputProps> = ({
   return (
     <div className={containerClassName}>
       <div>
-        <label className="font-bold" htmlFor={id}>
+        <label className="font-semibold" htmlFor={id}>
           {t(label)}
         </label>
       </div>
@@ -83,6 +83,9 @@ export const SubmitButton: FC<ButtonProps> = props => {
   )
 }
 
+export const textInputStyle =
+  'rounded border border-gray-400 py-1 px-2 w-full text-sm outline-none'
+
 export type TextInputProps = BaseInputProps & HTMLProps<HTMLInputElement>
 export const TextInput: FC<TextInputProps> = ({
   containerClassName,
@@ -94,7 +97,7 @@ export const TextInput: FC<TextInputProps> = ({
   return (
     <FormInputContainer containerClassName={containerClassName} {...props}>
       <input
-        className="rounded-md border-2 border-gray-300 py-1 px-2 w-full text-sm"
+        className={textInputStyle}
         type="text"
         {...field}
         {...props}
@@ -120,7 +123,7 @@ export const TextArea: FC<TextAreaProps> = ({
   return (
     <FormInputContainer containerClassName={containerClassName} {...props}>
       <textarea
-        className="rounded-md border-2 border-gray-300 px-1 w-full text-sm"
+        className={textInputStyle}
         {...field}
         {...props}
         placeholder={t(placeholder)}
