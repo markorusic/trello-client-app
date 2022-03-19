@@ -41,7 +41,7 @@
     "enterName": "Enter name",
     "enterDescription": "Add more detailed description",
     "comments": "Comments",
-    "deleteConfirm": "Delete Card"
+    "deleteConfirm": "Delete card"
   },
   "comments": {
     "enterComment": "Write a comment...",

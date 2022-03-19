@@ -45,7 +45,7 @@ export const CommentListItem: FC<CommentListItemProps> = ({ comment }) => {
             <UserIcon />
           )}
         </div>
-        <div className="flex items-baseline">
+        <div className="flex items-center">
           <h3 className="font-bold mr-2">
             {comment.memberCreator?.username ?? '...'}
           </h3>

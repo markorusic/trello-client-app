@@ -2,7 +2,6 @@ import { CSSProperties, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import cx from 'classnames'
 import { Dialog } from '@reach/dialog'
-import Portal from '@reach/portal'
 import '@reach/dialog/styles.css'
 
 export const CloseIcon = () => {
@@ -40,36 +39,34 @@ export const Modal: React.FC<ModalProps> = ({
   const { t } = useTranslation()
 
   return (
-    <Portal>
-      <Dialog
-        isOpen
-        onDismiss={onClose}
-        className={cx('relative p-0 rounded-lg ', className)}
-        style={{ minWidth: '400px', ...style }}
-        aria-label="dialog"
+    <Dialog
+      isOpen
+      onDismiss={onClose}
+      className={cx('relative p-0 rounded-lg ', className)}
+      style={{ minWidth: '400px', ...style }}
+      aria-label="dialog"
+    >
+      <div
+        className={cx(
+          'bg-gray-100 border-0 rounded-lg shadow-lg relative flex flex-col outline-none focus:outline-none',
+          contentClassName
+        )}
       >
-        <div
-          className={cx(
-            'bg-gray-100 border-0 rounded-lg shadow-lg relative flex flex-col outline-none focus:outline-none',
-            contentClassName
-          )}
-        >
-          <div className="flex items-start justify-between px-5 py-2 border-b border-solid border-gray-300 rounded-t">
-            <div className="text-xl font-bold break-all flex-1">
-              {typeof title === 'string' ? t(title) : title}
-            </div>
-            <button
-              className="p-1 h-full bg-transparent border-0 text-black text-3xl leading-none font-semibold outline-none focus:outline-none"
-              onClick={() => onClose()}
-            >
-              <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
-                <CloseIcon />
-              </span>
-            </button>
+        <div className="flex items-start justify-between px-5 py-2 border-b border-solid border-gray-300 rounded-t">
+          <div className="text-xl font-bold break-all flex-1">
+            {typeof title === 'string' ? t(title) : title}
           </div>
-          <div className="relative p-5 flex-auto">{children}</div>
+          <button
+            className="p-1 h-full bg-transparent border-0 text-black text-3xl leading-none font-semibold outline-none focus:outline-none"
+            onClick={() => onClose()}
+          >
+            <span className="text-black h-6 w-6 text-2xl block outline-none focus:outline-none">
+              <CloseIcon />
+            </span>
+          </button>
         </div>
-      </Dialog>
-    </Portal>
+        <div className="relative p-5 flex-auto">{children}</div>
+      </div>
+    </Dialog>
   )
 }

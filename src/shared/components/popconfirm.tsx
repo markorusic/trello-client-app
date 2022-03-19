@@ -1,10 +1,9 @@
-import { CSSProperties, FC, useState } from 'react'
+import { CSSProperties, FC, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useMeasure } from 'react-use'
 import cx from 'classnames'
 import { Button } from './button'
 import { XIcon } from './icons'
-import { useMeasure } from 'react-use'
-import { CloseIcon } from './modal'
 
 export type PopconfirmProps = {
   title: string
@@ -27,11 +26,34 @@ export const Popconfirm: FC<PopconfirmProps> = ({
   children
 }) => {
   const { t } = useTranslation()
+  const cotnainerRef = useRef<HTMLDivElement>(null)
   const [textRef, textSize] = useMeasure<HTMLDivElement>()
   const [showPopup, setShowPopup] = useState(false)
 
+  const closePopup = () => {
+    setShowPopup(false)
+  }
+
+  const togglePopup = () => {
+    setShowPopup(v => !v)
+  }
+
   return (
-    <div className="relative">
+    <div
+      ref={cotnainerRef}
+      className="relative"
+      tabIndex={0}
+      onKeyDown={event => {
+        if (event.key === 'Escape') {
+          event.stopPropagation()
+          closePopup()
+          const dialog = cotnainerRef.current?.closest('[role="dialog"]') as
+            | HTMLElement
+            | undefined
+          dialog?.focus()
+        }
+      }}
+    >
       {showPopup ? (
         <div
           style={{
@@ -49,14 +71,14 @@ export const Popconfirm: FC<PopconfirmProps> = ({
         >
           <div className="flex justify-between items-center py-2 border-b border-gray-200 text-gray-600">
             <div className="text-center flex-1">{t(title)}</div>
-            <div className="cursor-pointer" onClick={() => setShowPopup(false)}>
+            <div className="cursor-pointer" onClick={() => closePopup()}>
               <XIcon color="gray-600" size={5} />
             </div>
           </div>
 
           {description ? (
             <div className="flex justify-between items-center py-2">
-              <div className="">{t(description)}</div>
+              {t(description)}
             </div>
           ) : null}
 
@@ -66,7 +88,7 @@ export const Popconfirm: FC<PopconfirmProps> = ({
               size="md"
               variant="danger"
               onClick={() => {
-                setShowPopup(false)
+                closePopup()
                 setTimeout(() => onConfirm(), 0)
               }}
             >
@@ -78,7 +100,7 @@ export const Popconfirm: FC<PopconfirmProps> = ({
       <div
         ref={textRef}
         className="cursor-pointer select-none"
-        onClick={() => setShowPopup(v => !v)}
+        onClick={() => togglePopup()}
       >
         {children}
       </div>
